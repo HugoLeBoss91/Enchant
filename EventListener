@@ -1,0 +1,471 @@
+<?php
+
+
+
+namespace EnchantTable;
+
+
+
+use pocketmine\block\Block;
+
+use pocketmine\event\Listener;
+
+use pocketmine\event\player\PlayerInteractEvent;
+
+use pocketmine\item\Armor;
+
+use pocketmine\item\Bow;
+
+use pocketmine\item\enchantment\Enchantment;
+
+use pocketmine\item\enchantment\EnchantmentInstance;
+
+use pocketmine\item\Item;
+
+use pocketmine\item\Sword;
+
+use pocketmine\item\Tool;
+
+use pocketmine\utils\TextFormat as TF;
+
+use pocketmine\Player;
+
+use jojoe77777\FormAPI\SimpleForm;
+
+
+
+class EventListener implements Listener {
+
+
+
+    private $plugin;
+
+
+
+    public function __construct(Main $plugin)
+
+    {
+
+        $this->plugin = $plugin;
+
+    }
+
+
+
+    public function generateEnchants(Item $toEnchant, Block $ectable) : array {
+
+        $bookshelfs = $this->plugin->getBookshelfs($ectable);
+
+        if($bookshelfs >= 0) {
+
+            $levelSub = 0.20;
+
+        }
+
+        if($bookshelfs > 5) {
+
+            $levelSub = 0.40;
+
+        }
+
+        if($bookshelfs > 10) {
+
+            $levelSub = 0.70;
+
+        }
+
+        if($bookshelfs > 15) {
+
+            $levelSub = 1;
+
+        }
+
+        
+
+        $toEnchantid = $toEnchant->getId();
+
+        
+
+        //Épée
+
+        if($toEnchantid == 267 or $toEnchantid == 268 or $toEnchantid == 272 or $toEnchantid == 276 or $toEnchantid == 283 or $toEnchantid == 743) {
+
+            $firstEnch = explode(":", $this->plugin->swordEnchantments[array_rand($this->plugin->swordEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->swordEnchantments[array_rand($this->plugin->swordEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->swordEnchantments[array_rand($this->plugin->swordEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Arc
+
+        else if($toEnchant instanceof Bow) {
+
+            $firstEnch = explode(":", $this->plugin->bowEnchantments[array_rand($this->plugin->bowEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->bowEnchantments[array_rand($this->plugin->bowEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->bowEnchantments[array_rand($this->plugin->bowEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0] . ":" . rand(1, intval($firstEnch[1] * ($levelSub - 0.15))) . ":" . rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0] . ":" . rand(1, intval($secondEnch[1] * ($levelSub - 0.10))) . ":" . rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0] . ":" . rand(2, intval($thirdEnch[1] * ($levelSub))) . ":" . rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Outils
+
+        else if($toEnchant instanceof Tool or $toEnchantid == 744 or $toEnchantid == 745 or $toEnchantid == 746 or $toEnchantid == 747 ) {
+
+            $firstEnch = explode(":", $this->plugin->toolEnchantments[array_rand($this->plugin->toolEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->toolEnchantments[array_rand($this->plugin->toolEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->toolEnchantments[array_rand($this->plugin->toolEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Casque
+
+        else if($toEnchantid == 298 or $toEnchantid == 302 or $toEnchantid == 306 or $toEnchantid == 310 or $toEnchantid == 314 or $toEnchantid == 748) {
+
+            $firstEnch = explode(":", $this->plugin->helmetEnchantments[array_rand($this->plugin->helmetEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->helmetEnchantments[array_rand($this->plugin->helmetEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->helmetEnchantments[array_rand($this->plugin->helmetEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Plastron
+
+        else if($toEnchantid == 299 or $toEnchantid == 303 or $toEnchantid == 307 or $toEnchantid == 311 or $toEnchantid == 315 or $toEnchantid == 749) {
+
+            $firstEnch = explode(":", $this->plugin->chesplateEnchantments[array_rand($this->plugin->chesplateEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->chesplateEnchantments[array_rand($this->plugin->chesplateEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->chesplateEnchantments[array_rand($this->plugin->chesplateEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Jambière
+
+        else if($toEnchantid == 300 or $toEnchantid == 304 or $toEnchantid == 308 or $toEnchantid == 312 or $toEnchantid == 316 or $toEnchantid == 750) {
+
+            $firstEnch = explode(":", $this->plugin->leggingEnchantments[array_rand($this->plugin->leggingEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->leggingEnchantments[array_rand($this->plugin->leggingEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->leggingEnchantments[array_rand($this->plugin->leggingEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        //Bottes
+
+        else if($toEnchantid == 301 or $toEnchantid == 305 or $toEnchantid == 309 or $toEnchantid == 313 or $toEnchantid == 317 or $toEnchantid == 751 ) {
+
+            $firstEnch = explode(":", $this->plugin->bootsEnchantments[array_rand($this->plugin->bootsEnchantments)]);
+
+            $secondEnch = explode(":", $this->plugin->bootsEnchantments[array_rand($this->plugin->bootsEnchantments)]);
+
+            $thirdEnch = explode(":", $this->plugin->bootsEnchantments[array_rand($this->plugin->bootsEnchantments)]);
+
+            $enchants = array(
+
+                0 => $firstEnch[0].":".rand(1, intval($firstEnch[1] * ($levelSub - 0.15))).":".rand(intval(2 * ($levelSub + 1)), intval(6 * ($levelSub + 1))),
+
+                1 => $secondEnch[0].":".rand(1, intval($secondEnch[1] * ($levelSub - 0.10))).":".rand(intval(6 * ($levelSub + 1)), intval(10 * ($levelSub + 1))),
+
+                2 => $thirdEnch[0].":".rand(2, intval($thirdEnch[1] * ($levelSub))).":".rand(intval(10 * ($levelSub + 1)), intval(15 * ($levelSub + 1)))
+
+            );
+
+        }
+
+        else {
+
+            $enchants = [];
+
+        }
+
+        return $enchants;
+
+    }
+
+
+
+    public function openECTUI(Player $player, Item $toEnchant, Block $ectable) {
+
+
+
+        $enchants = $this->generateEnchants($toEnchant, $ectable);
+
+        if(empty($enchants)) {
+
+            $player->sendPopup("§cCette item ne peut pas être enchanté");
+
+            return;
+
+        }
+
+        $form = new SimpleForm(function (Player $player, int $data = null) use ($toEnchant, $enchants) {
+
+            if($data != null) {
+
+                switch ($data) {
+
+                    case 1:
+
+                    $arr = explode(":",$enchants[0]);
+
+                    if($player->getXpLevel() < $arr[2]) {
+
+                      $player->sendMessage("§cYou don't have enough levels!");
+
+                      return;
+
+                   } else {
+
+                      $ench = Enchantment::getEnchantmentByName($arr[0]);
+
+                      if($toEnchant->getEnchantment($ench->getId())) {
+
+                        $player->sendMessage("§cYou can't enchant the same enchantment again!");
+
+                        return;
+
+                        }
+
+                        $player->setXpLevel($player->getXpLevel() - $arr[2]);
+
+                        $level = $arr[1];
+
+                        if($level <= 0) {
+
+                          $level = 1;
+
+                          }
+
+                          $toEnchant->addEnchantment(new EnchantmentInstance($ench, (int) $level));
+
+                          $player->getInventory()->setItemInHand($toEnchant);
+
+                        }
+
+                    break;
+
+                    case 2:
+
+                    $arr = explode(":",$enchants[1]);
+
+                    if($player->getXpLevel() < $arr[2]) {
+
+                      $player->sendMessage("§cYou don't have enough levels!");
+
+                      return;
+
+                   } else {
+
+                      $ench = Enchantment::getEnchantmentByName($arr[0]);
+
+                      if($toEnchant->getEnchantment($ench->getId())) {
+
+                        $player->sendMessage("§cYou can't enchant the same enchantment again!");
+
+                        return;
+
+                        }
+
+                        $player->setXpLevel($player->getXpLevel() - $arr[2]);
+
+                        $level = $arr[1];
+
+                        if($level <= 0) {
+
+                          $level = 1;
+
+                          }
+
+                          $toEnchant->addEnchantment(new EnchantmentInstance($ench, (int) $level));
+
+                          $player->getInventory()->setItemInHand($toEnchant);
+
+                        }
+
+                        break;
+
+                    case 3:
+
+                    $arr = explode(":",$enchants[2]);
+
+                    if($player->getXpLevel() < $arr[2]) {
+
+                      $player->sendMessage("§cYou don't have enough levels!");
+
+                      return;
+
+                   } else {
+
+                      $ench = Enchantment::getEnchantmentByName($arr[0]);
+
+                      if($toEnchant->getEnchantment($ench->getId())) {
+
+                        $player->sendMessage("§cYou can't enchant the same enchantment again!");
+
+                        return;
+
+                        }
+
+                        $player->setXpLevel($player->getXpLevel() - $arr[2]);
+
+                        $level = $arr[1];
+
+                        if($level <= 0) {
+
+                          $level = 1;
+
+                          }
+
+                          if($toEnchant->getId() !== $player->getInventory()->getItemInHand()->getId()){
+
+                                $player->sendMessage(TF::RED . "Are you trying to swindle me?");
+
+                            return;
+
+                            }
+
+                            $toEnchant->addEnchantment(new EnchantmentInstance($ench, (int) $level));
+
+                            $player->getInventory()->setItemInHand($toEnchant);
+
+                        }
+
+                        break;
+
+                    default:
+
+
+
+                        break;
+
+                }
+
+            }
+
+        });
+
+
+
+        $form->setTitle("Enchanting: ".$toEnchant->getName());
+
+        $form->addButton("§l§cLEAVE");
+
+        foreach ($enchants as $ec) {
+
+            $arr = explode(":", $ec);
+
+            $lvl = $arr[1];
+
+            if($lvl <= 0) {
+
+                $lvl = 1;
+
+            }
+
+            $form->addButton($arr[0]." (".$lvl.") for ".$arr[2]." levels");
+
+        }
+
+        $form->setContent("Enchantez votre item");
+
+        $form->sendToPlayer($player);
+
+    }
+
+
+
+    public function onTouch(PlayerInteractEvent $event) {
+
+
+
+        $block = $event->getBlock();
+
+        if($block->getId() === Block::ENCHANTING_TABLE || $block->getId() === Block::ENCHANTMENT_TABLE) {
+
+            $event->setCancelled(true);
+
+            if($event->getPlayer()->isSneaking() === false) {
+
+                $toEnchant = $event->getItem();
+
+                $this->openECTUI($event->getPlayer(), $toEnchant, $block);
+
+             }else{
+
+               $event->getPlayer()->sendMessage("§cIl faut être désneak pour utiliser la table d'enchantement");
+
+            }
+
+        }
+
+    }
+
+}
